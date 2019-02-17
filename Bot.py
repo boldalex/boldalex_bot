@@ -78,7 +78,7 @@ def schedule_handler(message):
         bot.send_message(message.chat.id, 'Неизвестная команда. Введите /help для получения справки')
 
 def main():
-    bot.polling(60)
+    bot.polling(none_stop=True)
     
 
 if __name__ == '__main__':
