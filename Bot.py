@@ -47,32 +47,34 @@ class Schedule:
 
 @bot.message_handler(commands=['help',])
 def help_handler(message):
-	bot.send_message(message.chat.id, help.read())
+	bot.send_message(message.chat.id, help.read(), parse_mode='HTML')
 
 @bot.message_handler(content_types=['text'])
 def schedule_handler(message):
+    text = message.text.lower()
+
     #отправка расписания указанного телеканала:
-    if message.text in channel_url.keys():
-        res=''
-        for i in Schedule(message.text).parse():
+    if text in channel_url.keys():
+        res='<b>'+ text.upper() + '</b>'+'\n'
+        for i in Schedule(text).parse():
             res+= i + '\n'
-        bot.send_message(message.chat.id, res)
+        bot.send_message(message.chat.id, res, parse_mode='HTML')
         print(message.chat.id)
 
     #отправка трансляций по указанной категории:
-    elif message.text in shows.keys():
+    elif text in shows.keys():
         res=''
         for chan in channel_url.keys():
             sched=''
             for show in Schedule(chan).parse():
-                if message.text in show.lower():
-                    sched += shows[message.text] + show + '\n'
+                if text in show.lower():
+                    sched += shows[text] + show + '\n'
             if sched != '':
-                res+= chan.upper() + '\n' + sched
+                res+= '<b>' + chan.upper() + '</b>' + '\n' + sched
         if res == '':
-            bot.send_message(message.chat.id, message.text.capitalize() + ' сегодня не показывают!')
+            bot.send_message(message.chat.id, text.capitalize() + ' сегодня не показывают!')
         else:
-            bot.send_message(message.chat.id, res)
+            bot.send_message(message.chat.id, res, parse_mode='HTML')
 
     else:
         bot.send_message(message.chat.id, 'Неизвестная команда. Введите /help для получения справки')
