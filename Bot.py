@@ -4,8 +4,7 @@ import datetime
 from bs4 import BeautifulSoup
 
 #Определение постоянных переменных
-TOKEN = '774205504:AAFKTmHXrvmSmuDa5LZ-NY9UCEdyPKBBoFw'
-bot = telebot.TeleBot(TOKEN)
+bot = telebot.TeleBot(<TOKEN>)
 channel_url = {
 'матч тв' : 'https://tv.yandex.ru/213/channels/match-1593',
 'матч арена' : 'https://tv.yandex.ru/213/channels/match-arena-1667',
