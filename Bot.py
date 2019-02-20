@@ -1,14 +1,11 @@
 import requests
 import telebot
 import datetime
-import time
 from bs4 import BeautifulSoup
 
 #Определение постоянных переменных
 TOKEN = '774205504:AAFKTmHXrvmSmuDa5LZ-NY9UCEdyPKBBoFw'
 bot = telebot.TeleBot(TOKEN)
-help = open('Media/Help.txt')
-delay = 60
 channel_url = {
 'матч тв' : 'https://tv.yandex.ru/213/channels/match-1593',
 'матч арена' : 'https://tv.yandex.ru/213/channels/match-arena-1667',
@@ -45,10 +42,19 @@ class Schedule:
             programms.append(li.time.text + ' ' + prog.text)
         return programms
 
+#обработка команды /help
 @bot.message_handler(commands=['help',])
 def help_handler(message):
-	bot.send_message(message.chat.id, help.read(), parse_mode='HTML')
+    res = '<b>СПРАВКА</b> \n\n'
+    res+= '<b>Расписание телеканалов:</b>\n'
+    for channel in channel_url.keys():
+        res+= '<b>{}</b> - расписание телеканала {}\n'.format(channel, channel)
+    res+= '\n<b>Трансляции по категориям:</b>\n'
+    for show in shows.keys():
+        res+= '<b>{}</b> - трансляции по категории {}\n'.format(show, show)
+    bot.send_message(message.chat.id, res, parse_mode='HTML')
 
+#обработка сообщений
 @bot.message_handler(content_types=['text'])
 def schedule_handler(message):
     text = message.text.lower()
@@ -76,6 +82,7 @@ def schedule_handler(message):
         else:
             bot.send_message(message.chat.id, res, parse_mode='HTML')
 
+    #ответ на неизвестную команду
     else:
         bot.send_message(message.chat.id, 'Неизвестная команда. Введите /help для получения справки')
 
